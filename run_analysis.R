@@ -1,7 +1,13 @@
-
-inPath = "/data/UCI HAR Dataset"
+#Required libraries
 library(dplyr)
 library(tidyr)
+
+#0. download and unzip data
+setInternet2(use = TRUE)
+fileUrl <-"https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+
+download.file(fileUrl,destfile="data/UCI.zip", method="internal")
+unzip('data/UCI.zip',exdir="data")
 
 #1 "Merges the training and the test sets to create one data set."
 #a. Load training set & test set:x_train and x_test
@@ -143,5 +149,5 @@ dots <- lapply(c("Y","subject"), as.symbol)
 by_subject_by_activity <- group_by_(combDesc,.dots=dots)
 #e. Then apply the dplyr function summarize_each to create a summary table computing mean across activity & subject.
 subject_activity_means <- summarise_each(by_subject_by_activity,funs(mean)) 
-#f. This yields a dataframe of 68 columns and 180 rows
+#f. This yields a dataframe of 68 columns and 180 rows, which is saved to disk as "subject_activity_means_tidied.txt"
 write.table(subject_activity_means, "subject_activity_means_tidied.txt", row.name=FALSE)
